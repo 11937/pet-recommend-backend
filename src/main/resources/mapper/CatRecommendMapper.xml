@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 等于 Mapper接口类名 -->
+<mapper namespace="com.cat_card.mapper.CatRecommendMapper">
+
+    <!-- 猫咪推荐查询 -->
+    <select
+            id="recommendCats"
+            parameterType="com.cat_card.pojo.CatRecommendDTO"
+            resultType="com.cat_card.pojo.Cat"
+    >
+        SELECT *
+        FROM cat_characteristic
+        WHERE 1=1
+            <!-- 动态拼接筛选条件：逻辑不变 -->
+            <if test="suitableHousing != null">
+                AND suitable_housing = #{suitableHousing}
+            </if>
+
+            <if test="suitableExperience != null">
+                AND suitable_experience = #{suitableExperience}
+            </if>
+
+            <if test="budgetLevel != null">
+                AND budget_level = #{budgetLevel}
+            </if>
+
+            <!-- 适配逗号分隔字符串：用FIND_IN_SET替代IN -->
+            <if test="personalityType != null and personalityType != ''">
+                AND FIND_IN_SET(personality_type, #{personalityType})
+            </if>
+
+            <if test="sheddingDegree != null and sheddingDegree != ''">
+                AND FIND_IN_SET(shedding_degree, #{sheddingDegree})
+            </if>
+
+            <if test="requiredCareHours != null">
+                AND required_care_hours = #{requiredCareHours}
+            </if>
+
+        LIMIT 10;
+    </select>
+
+</mapper>
