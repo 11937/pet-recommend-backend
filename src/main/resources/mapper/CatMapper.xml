@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cat_card.mapper.CatMapper">
+    <!--模糊匹配必须自定义-->
+    <resultMap id="catMap" type="com.cat_card.pojo.Cat">
+        <id column="id" property="id"></id>
+        <id column="breed_name" property="breedName"></id>
+        <id column="breed_type" property="breedType"></id>
+        <id column="suitable_housing" property="suitableHousing"></id>
+        <id column="required_care_hours" property="requiredCareHours"></id>
+        <id column="suitable_experience" property="suitableExperience"></id>
+        <id column="budget_level" property="budgetLevel"></id>
+        <id column="shedding_degree" property="sheddingDegree"></id>
+        <id column="personality_type" property="personalityType"></id>
+        <id column="breed_features" property="breedFeatures"></id>
+        <id column="personality_traits" property="personalityTraits"></id>
+        <id column="feeding_suggestions" property="feedingSuggestions"></id>
+        <id column="health_attention" property="healthAttention"></id>
+        <id column="interaction_needs" property="interactionNeeds"></id>
+        <id column="budget_reference" property="budgetReference"></id>
+        <id column="img_url" property="imgUrl"></id>
+
+
+    </resultMap>
+    <!--查询-->
+    <select id="findCatList" resultMap="catMap">
+        select .*
+
+    </select>
+
+</mapper>
