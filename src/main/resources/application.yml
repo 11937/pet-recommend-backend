@@ -1,6 +1,6 @@
 # 服务器配置
 server:
-  port: 8443
+  port: 1010
   ssl:  # 你漏了这个核心层级！所有 SSL 相关配置都要放在 ssl 节点下
     key-store: classpath:keystore.p12        # 证书在resources目录下
     key-store-password: 123456         # 必须和转换命令的密码一致
