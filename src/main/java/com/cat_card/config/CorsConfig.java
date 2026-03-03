@@ -18,10 +18,10 @@ public class CorsConfig {
         // 注意：2.7.6 用 addAllowedOriginPattern，不要用 addAllowedOrigin（已过时）
         //config.addAllowedOriginPattern("https://pet-recommend-frontend.vercel.app"); // Vercel
         //config.addAllowedOriginPattern("https://deluxe-crostata-8dafc2.netlify.app"); // Netlify
-        config.addAllowedOriginPattern("http://localhost:1011"); // 本地前端
+        config.addAllowedOriginPattern("http://localhost:1011/**"); // 本地前端
         config.addAllowedOriginPattern("http://10.80.214.86:1011"); // 本地IP前端
         config.addAllowedOriginPattern("https://11937.github.io");
-
+        config.addAllowedOriginPattern("http://localhost:1011/pet-recommend-frontend");
         // ========== 必配项（跨域核心） ==========
         config.setAllowCredentials(true); // 允许携带Cookie（跨域必须开）
         config.addAllowedMethod("*");     // 允许所有请求方法（GET/POST/PUT等）

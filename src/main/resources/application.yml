@@ -12,9 +12,9 @@ spring:
   #???mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://cd-cdb-5rw7i93e.sql.tencentcdb.com:26337/cat_recommend_system?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    username: dev_user
-    password: "@1234Qwer"
+    url: jdbc:mysql://localhost:3306/cat_recommend_system?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: "@1234Qwer.."
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -26,7 +26,7 @@ spring:
 #mybatis-plus
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.xkd.pojo
+  type-aliases-package: com.cat_card.pojo
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

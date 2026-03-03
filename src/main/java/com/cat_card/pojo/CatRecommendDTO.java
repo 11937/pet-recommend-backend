@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CatRecommendDTO<T> {
+public class CatRecommendDTO {
     private Integer suitableHousing;    // 适配户型（可选，不选则不筛选）
     private Integer suitableExperience; // 适配经验（可选）
     private Integer budgetLevel;         // 预算（可选）

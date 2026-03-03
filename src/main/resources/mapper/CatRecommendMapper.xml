@@ -43,4 +43,7 @@
         LIMIT 10;
     </select>
 
+    <select id="selectAllCats" resultType="com.cat_card.pojo.Cat">
+        SELECT * FROM cat_characteristic
+    </select>
 </mapper>

@@ -1,9 +1,12 @@
 package com.cat_card.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 猫咪品种实体类（对应 cat_recommend_system 库的 cat_characteristic 表）
@@ -59,7 +62,30 @@ public class Cat {
     // 猫咪图片地址
     private String imgUrl;
 
+    // ===================== 业务逻辑字段（多值适配，不映射到数据库） =====================
+    // 核心：用 @TableField(exist = false) 标记，MyBatis-Plus 会忽略这些字段的数据库映射
+    // 适配户型列表（如 [2,3]，支持多值适配）
+    @TableField(exist = false)
+    private List<Integer> suitableHousingList;
+    // 适配经验列表
+    @TableField(exist = false)
+    private List<Integer> suitableExperienceList;
+    // 预算等级列表
+    @TableField(exist = false)
+    private List<Integer> budgetLevelList;
+    // 掉毛程度列表
+    @TableField(exist = false)
+    private List<Integer> sheddingDegreeList;
+    // 性格类型列表
+    @TableField(exist = false)
+    private List<Integer> personalityTypeList;
+    // 照顾时间列表
+    @TableField(exist = false)
+    private List<Integer> requiredCareHoursList;
 
-
-
+    // 推荐逻辑所需字段（不映射数据库）
+    @TableField(exist = false)
+    private Integer matchScore;    // 匹配分数
+    @TableField(exist = false)
+    private Integer popularity = 3; // 热门度（默认3，热门品种手动设为4/5）
 }

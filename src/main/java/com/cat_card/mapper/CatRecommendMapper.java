@@ -10,4 +10,5 @@ public interface CatRecommendMapper {
     // 方法名必须MyBatis XML里的select标签id一致（recommendCats）
     List<Cat> recommendCats(CatRecommendDTO dto);
 
+    List<Cat> selectAllCats();
 }
