@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ===================== 基础工程信息 ===================== -->
+    <!-- 父工程坐标：整个微服务项目的根POM，统一管理版本和依赖 -->
+    <groupId>com.pet</groupId> <!-- 项目组ID，自定义 -->
+    <artifactId>pet-micro-system</artifactId> <!-- 工程名称 -->
+    <version>1.0.0</version> <!-- 版本号 -->
+    <packaging>pom</packaging> <!-- 打包方式：pom（父工程必须） -->
+    <name>pet-micro-system</name> <!-- 工程显示名称 -->
+    <description>猫咪推荐微服务父工程</description> <!-- 工程描述 -->
+
+    <!-- ===================== 子模块声明 ===================== -->
+    <!-- 声明当前父工程包含的子模块，Maven编译时会按顺序构建这些子模块 -->
+    <modules>
+        <module>pet-common</module> <!-- 通用工具模块：存放公共DTO、工具类、通用配置 -->
+        <module>pet-cat-info-service</module> <!-- 猫咪信息服务：核心业务模块（提供接口） -->
+        <module>pet-cat-recommend-service</module> <!-- 猫咪推荐服务：推荐逻辑业务模块 -->
+    </modules>
+
+    <!-- ===================== 全局属性配置 ===================== -->
+    <!-- 统一管理所有依赖版本，避免硬编码，便于后续统一升级 -->
+    <properties>
+        <!-- JDK版本：指定项目编译/运行的Java版本为1.8 -->
+        <java.version>1.8</java.version>
+        <!-- 编码格式：统一项目编译和报告输出的编码，避免中文乱码 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- 核心框架版本（Spring生态）：统一管理避免版本冲突 -->
+        <spring-boot.version>2.7.6</spring-boot.version> <!-- Spring Boot核心版本（稳定版，适配JDK8） -->
+        <spring-cloud.version>2021.0.5</spring-cloud.version> <!-- Spring Cloud版本（与Spring Boot 2.7.6适配） -->
+        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version> <!-- 阿里微服务组件版本（Nacos/Sentinel等） -->
+
+        <!-- 第三方依赖版本：未被Spring Boot父依赖管理的自定义依赖 -->
+        <mybatis-plus.version>3.4.0</mybatis-plus.version> <!-- MyBatis-Plus版本（ORM框架，简化CRUD） -->
+        <fastjson2.version>2.0.32</fastjson2.version> <!-- Fastjson2版本（JSON序列化，替代Jackson） -->
+        <commons-pool2.version>2.11.1</commons-pool2.version> <!-- Redis连接池版本（适配Spring Data Redis） -->
+        <mysql.version>8.0.30</mysql.version> <!-- MySQL驱动版本（适配MySQL8.0+，兼容JDK8） -->
+        <spring-session.version>2.7.4</spring-session.version> <!-- Spring Session版本（分布式会话，适配Redis） -->
+    </properties>
+
+    <!-- ===================== 依赖版本锁定（核心） ===================== -->
+    <!-- dependencyManagement：仅锁定依赖版本，不实际引入依赖；子模块需显式声明依赖才会生效 -->
+    <!-- 作用：统一所有子模块的依赖版本，避免版本漂移导致的冲突 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 1. 导入核心框架的版本管理POM（优先级最高） -->
+            <!-- Spring Boot核心依赖版本管理：子模块引入spring-boot-starter无需指定版本 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope> <!-- import：仅导入版本管理，不引入依赖 -->
+            </dependency>
+            <!-- Spring Cloud版本管理：子模块引入OpenFeign/Nacos等无需指定版本 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud Alibaba版本管理：阿里微服务组件版本统一 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 2. 自定义子模块版本锁定：pet-common模块的版本统一 -->
+            <dependency>
+                <groupId>com.pet</groupId>
+                <artifactId>pet-common</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <!-- 3. 第三方依赖版本锁定（未被核心框架管理的依赖） -->
+            <!-- MyBatis-Plus核心启动器 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- MyBatis-Plus注解包（单独拆分，便于通用模块仅引入注解） -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- Fastjson2核心包 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <!-- Fastjson2与Spring Boot集成包（自动配置JSON解析器） -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2-spring-boot-starter</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <!-- Redis连接池（Spring Data Redis依赖此包实现连接池管理） -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
+            </dependency>
+            <!-- MySQL驱动（JDBC连接MySQL数据库） -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <!-- Spring Session Redis（分布式会话，将Session存储到Redis） -->
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-data-redis</artifactId>
+                <version>${spring-session.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- ===================== 父工程通用依赖 ===================== -->
+    <!-- 所有子模块都会继承这些依赖，无需在子模块重复声明 -->
+    <dependencies>
+        <!-- Lombok：简化实体类代码（无需写get/set/构造方法），optional=true表示子模块可按需引入 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Spring Boot测试依赖：所有子模块的单元测试通用，scope=test仅测试时生效 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- ===================== 构建配置（子模块复用） ===================== -->
+    <!-- 统一管理Maven构建插件，子模块无需重复配置 -->
+    <build>
+        <plugins>
+            <!-- Maven编译插件：指定JDK版本和编码，避免编译时版本/编码问题 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version> <!-- 稳定版，适配JDK8 -->
+                <configuration>
+                    <source>${java.version}</source> <!-- 源码编译版本 -->
+                    <target>${java.version}</target> <!-- 字节码运行版本 -->
+                    <encoding>${project.build.sourceEncoding}</encoding> <!-- 编译编码 -->
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot打包插件：将子模块打包为可执行JAR包 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version> <!-- 与Spring Boot版本一致 -->
+                <configuration>
+                    <!-- 排除Lombok（避免打包时引入冗余依赖） -->
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId> <!-- 修正原错误的groupId，确保排除生效 -->
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <!-- 执行repackage目标：将普通JAR转为可执行JAR -->
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

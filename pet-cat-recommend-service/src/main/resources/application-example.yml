@@ -1,0 +1,43 @@
+# 服务器配置
+server:
+  port: 1011
+  ssl:
+    enabled: false  # 彻底关闭HTTPS
+    # key-store: classpath:
+    # key-store-password:
+    # key-store-type: PKCS12
+    # key-alias: tomcat
+
+# Redis 哨兵配置
+redis:
+  sentinel:
+    master: mymaster
+    nodes:
+      127.0.0.1:26379
+  password: 123456
+  database: 0
+  timeout: 5000
+  lettuce:
+    pool:
+      max-active: 10
+      max-idle: 5
+      min-idle: 2
+      max-wait: 3000
+    shutdown-timeout: 100
+
+# 分布式 Session
+session:
+  store-type: redis
+  redis:
+    namespace: spring:session
+    flush-mode: on_save
+    cleanup-cron: 0 * * * * ?
+
+jackson:
+  date-format: yyyy-MM-dd HH:mm:ss
+  time-zone: GMT+8
+
+# 日志
+logging:
+  level:
+    org.springframework.web: DEBUG

@@ -1,0 +1,25 @@
+# 项目通用忽略
+*.iml
+*.iws
+*.ipr
+.idea/
+.DS_Store
+
+# 编译文件
+target/
+*.class
+
+# 配置文件（最关键！保护密码、证书）
+**/application.yml
+
+# 证书
+*.p12
+*.jks
+*.keystore
+
+# 日志
+*.log
+
+# 临时文件
+tmp/
+temp/
