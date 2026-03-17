@@ -74,7 +74,11 @@ spring:
 - 查看主节点状态                                 sentinel master mymaster
 - 查看从节点列表                                 sentinel slaves mymaster
 - 查看哨兵自身信息                               sentinel info
-- 
+##git基础命令
+- 添加                   git add .
+- 日志信息                git commit -m "修改了xx功能"
+- 推送                   git push
+
 
 
 # sentinel26379.conf配置文件参考

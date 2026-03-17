@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController  //声明控制器 响应请求
 @RequestMapping("/breed")  //请求映射父路径
 public class AllCatController {

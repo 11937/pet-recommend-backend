@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
-// name = 你要调用的 服务名
+// name = 要调用的服务名
 @FeignClient(
         name = "pet-info-search",
         url = "http://localhost:1010"  // Feign 默认调用HTTP
