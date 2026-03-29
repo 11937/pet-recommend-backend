@@ -1,0 +1,16 @@
+# bootstrap.yml（分布式核心配置）
+spring:
+  application:
+    name: user-service # 自定义服务名，如user-service、order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # Nacos地址（先启动Nacos）
+      config:
+        server-addr: localhost:8848
+        file-extension: yml # 配置文件格式
+  # 关键配置：声明导入Nacos配置（解决核心报错）
+  config:
+    import: optional:nacos:${spring.application.name}.${spring.cloud.nacos.config.file-extension}
+  profiles:
+    active: dev # 环境标识（dev/test/prod）

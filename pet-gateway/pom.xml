@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- ===================== 父工程继承 ===================== -->
+    <!-- 继承根父工程的版本管理和通用配置，无需重复声明版本 -->
+    <parent>
+        <groupId>com.pet</groupId> <!-- 父工程组ID -->
+        <artifactId>pet-micro-system</artifactId> <!-- 父工程名称 -->
+        <version>1.0.0</version> <!-- 父工程版本 -->
+        <relativePath>../pom.xml</relativePath> <!-- 父工程pom.xml路径（上级目录） -->
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>pet-gateway</artifactId>
+
+    <dependencies>
+        <!-- 网关核心（必须） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+        <!-- Nacos 服务发现（必须） -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- 网关限流熔断（企业级） -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pet</groupId>
+            <artifactId>pet-common</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

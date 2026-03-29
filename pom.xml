@@ -10,14 +10,14 @@
     <version>1.0.0</version> <!-- 版本号 -->
     <packaging>pom</packaging> <!-- 打包方式：pom（父工程必须） -->
     <name>pet-micro-system</name> <!-- 工程显示名称 -->
-    <description>猫咪推荐微服务父工程</description> <!-- 工程描述 -->
+    <description>宠物推荐微服务父工程</description> <!-- 工程描述 -->
 
     <!-- ===================== 子模块声明 ===================== -->
     <!-- 声明当前父工程包含的子模块，Maven编译时会按顺序构建这些子模块 -->
     <modules>
         <module>pet-common</module> <!-- 通用工具模块：存放公共DTO、工具类、通用配置 -->
-        <module>pet-cat-info-service</module> <!-- 猫咪信息服务：核心业务模块（提供接口） -->
-        <module>pet-cat-recommend-service</module> <!-- 猫咪推荐服务：推荐逻辑业务模块 -->
+        <module>pet-info-service</module> <!-- 信息服务：核心业务模块（提供接口） -->
+        <module>pet-recommend-service</module> <!-- 推荐服务：推荐逻辑业务模块 -->
     </modules>
 
     <!-- ===================== 全局属性配置 ===================== -->

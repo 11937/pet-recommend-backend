@@ -44,5 +44,6 @@ public class Result<T> implements Serializable {
         this.code = code;
         this.msg = msg;
     }
+
 }
 

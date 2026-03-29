@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ===================== 父工程继承 ===================== -->
+    <!-- 继承根父工程的版本管理，核心依赖版本无需重复声明 -->
+    <parent>
+        <groupId>com.pet</groupId> <!-- 父工程组ID -->
+        <artifactId>pet-micro-system</artifactId> <!-- 根父工程名称 -->
+        <version>1.0.0</version> <!-- 父工程版本 -->
+        <relativePath>../pom.xml</relativePath> <!-- 父工程pom路径（上级目录） -->
+    </parent>
+
+    <!-- ===================== 模块基础信息 ===================== -->
+    <artifactId>pet-recommend-service</artifactId> <!-- 模块名称：猫咪推荐服务 -->
+    <name>pet-recommend-service</name> <!-- 模块显示名称 -->
+    <description>推荐服务（核心职责：实现个性化推荐逻辑，调用其他服务获取数据）</description>
+
+    <!-- ===================== 核心依赖配置 ===================== -->
+    <dependencies>
+        <!-- 1. 通用模块依赖：引入公共DTO、工具类、注解等，复用通用能力 -->
+        <dependency>
+            <groupId>com.pet</groupId>
+            <artifactId>pet-common</artifactId>
+            <!-- 版本继承父工程的pet-common.version（1.0.0） -->
+        </dependency>
+
+        <!-- 2. Spring Web核心：提供HTTP接口能力（推荐服务对外暴露推荐接口） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 版本继承父工程spring-boot.version（2.7.6） -->
+        </dependency>
+
+        <!-- 3. Nacos微服务核心依赖（注册发现 + 配置中心） -->
+        <!-- 3.1 Nacos注册发现：将推荐服务注册到Nacos，供其他服务发现/调用 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <!-- 版本继承父工程spring-cloud-alibaba.version（2021.0.5.0） -->
+        </dependency>
+        <!-- 3.2 Nacos配置中心：从Nacos拉取推荐服务的配置（如推荐规则、Redis地址等） -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <!-- 3.3 Bootstrap配置：支持Nacos配置中心的bootstrap.yml/bootstrap.properties加载（Spring Cloud 2021.x必需） -->
+        <!-- 版本3.1.5：与Spring Cloud 2021.0.5完全适配，保证配置加载优先级 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+
+        <!-- 4. OpenFeign：跨服务调用（推荐服务调用猫咪信息服务获取基础数据） -->
+        <!-- 版本3.1.5：与Spring Cloud 2021.0.5适配，支持声明式HTTP调用 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+        <!-- Feign 负载均衡-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <!-- 5. Redis相关依赖（缓存 + 分布式Session） -->
+        <!-- 5.1 Redis核心：操作Redis缓存（存储推荐结果、用户偏好等） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- 5.2 Redis连接池：提升Redis连接效率，避免频繁创建连接 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <!-- 5.3 分布式Session：将Session存储到Redis，解决微服务Session共享问题 -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+
+        <!-- 6. DevTools热部署：开发阶段修改代码无需重启服务，提升开发效率 -->
+        <!-- scope=runtime：仅运行时生效；optional=true：不传递给依赖此模块的其他服务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 必须加！解决实体类注解依赖 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pet</groupId>
+            <artifactId>pet-user-service</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- ===================== 构建配置（打包为可执行JAR） ===================== -->
+    <build>
+        <plugins>
+            <!-- Spring Boot打包插件：将推荐服务打包为可独立运行的JAR包 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version> <!-- 与Spring Boot版本一致（2.7.6） -->
+                <configuration>
+                    <!-- 指定推荐服务的启动类：打包后JAR的入口类，必须准确 -->
+                    <mainClass>com.pet.cat.recommend.RecommendApplication</mainClass>
+                </configuration>
+                <executions>
+                    <!-- 执行repackage目标：将普通JAR转为Spring Boot可执行JAR -->
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
