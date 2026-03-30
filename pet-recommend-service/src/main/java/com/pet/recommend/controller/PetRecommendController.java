@@ -5,15 +5,13 @@ import com.pet.recommend.service.PetRecommendService;
 import com.pet.common.dto.Pet;
 import com.pet.common.dto.PetRecommendDTO;
 import com.pet.common.entity.Result;
-
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/breed")
+@RequestMapping("/recommend")
 @CrossOrigin(origins = "*") // 跨域配置
 public class PetRecommendController {
 
@@ -21,7 +19,7 @@ public class PetRecommendController {
     private PetRecommendService petRecommendService;
 
     // 猫咪推荐接口（POST请求，接收筛选条件）
-    @PostMapping("/recommend")
+    @PostMapping("")
     public Result<List<Pet>> recommendCats(@RequestBody(required = false) PetRecommendDTO dto) {
         try {
             // 防御性处理：DTO为空时新建空对象，避免空指针

@@ -3,18 +3,20 @@ package com.pet.gateway.exception;
 
 
 import com.pet.gateway.result.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * 捕获所有运行时异常
-     */
+    // 网关必须返回 Mono<Result>
     @ExceptionHandler(RuntimeException.class)
-    public Result<Object> handleRuntimeException(RuntimeException e) {
-        // 直接返回你的 Result，只给 message
-        return Result.fail(500, e.getMessage());
+    public Mono<Result<Object>> handleRuntimeException(RuntimeException e) {
+        log.error("网关异常：{}", e.getMessage());
+        // 外面包一层 Mono.just( )
+        return Mono.just(Result.fail(500, e.getMessage()));
     }
 }

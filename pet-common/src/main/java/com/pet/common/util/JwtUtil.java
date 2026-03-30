@@ -1,5 +1,4 @@
-package com.pet.gateway.util;
-
+package com.pet.common.util;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,14 +10,13 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // org.springframework.beans.factory.annotation.Value
     @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expire}")
     private Long expire;
 
-    // 生成Token
+    // 生成Token（业务用）
     public String generateToken(Long userId, String phone) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expire * 1000);

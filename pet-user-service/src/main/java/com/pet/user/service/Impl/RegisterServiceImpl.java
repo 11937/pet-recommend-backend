@@ -8,9 +8,9 @@ import com.pet.user.dto.RegisterDTO;
 import com.pet.user.entity.User;
 import com.pet.user.mapper.UserMapper;
 import com.pet.user.service.RegisterService;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 
 @Service

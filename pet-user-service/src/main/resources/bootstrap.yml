@@ -1,7 +1,7 @@
 # bootstrap.yml（分布式核心配置）
 spring:
   application:
-    name: user-service # 自定义服务名，如user-service、order-service
+    name: pet-user-service # 自定义服务名，如user-service、order-service
   cloud:
     nacos:
       discovery:

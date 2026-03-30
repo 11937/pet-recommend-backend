@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.pet.common.entity.Result;
+import com.pet.common.util.JwtUtil;
 import com.pet.user.dto.elepet.PetProfileCreateDTO;
 import com.pet.user.entity.elepet.PetModel;
 import com.pet.user.entity.elepet.PetProfile;
@@ -11,14 +12,16 @@ import com.pet.user.mapper.elepet.PetModelMapper;
 import com.pet.user.service.elepet.DecorationService;
 import com.pet.user.service.elepet.PetProfileService;
 import com.pet.user.vo.elepet.PetProfileVO;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/elePet")
 public class PetProfileController {
@@ -29,21 +32,43 @@ public class PetProfileController {
     @Resource
     private PetProfileService petProfileService;
 
+    @Resource
+    private JwtUtil jwtUtil;
+
     private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof Long) {
-            return (Long) authentication.getPrincipal();
+        try {
+            ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attrs == null) {
+                return null;
+            }
+
+            HttpServletRequest request = attrs.getRequest();
+            // 从标准头获取
+            String auth = request.getHeader("Authorization");
+
+            if (auth == null || !auth.startsWith("Bearer ")) {
+                return null;
+            }
+
+            // 去掉 "Bearer " 前缀
+            String token = auth.substring(7);
+            return jwtUtil.getUserIdFromToken(token);
+
+        } catch (Exception e) {
+            log.error("获取用户ID失败", e);
+            return null;
         }
-        throw new RuntimeException("用户未登录");
     }
 
-    @PostMapping
+    //用户创建宠物档案
+    @PostMapping("/create")
     public Result<PetProfileVO> createPet(@RequestBody PetProfileCreateDTO dto) {
         Long userId = getCurrentUserId();
         PetProfile pet = petProfileService.createPet(userId, dto);
         return new Result<>(200, "创建成功", PetProfileVO.from(pet));
     }
 
+    //查询用户拥有的宠物档案
     @GetMapping("/list")
     public Result<List<PetProfileVO>> listPets() {
         Long userId = getCurrentUserId();
@@ -56,6 +81,7 @@ public class PetProfileController {
         return new Result<>(200, "查询成功", voList);
     }
 
+    //查询用户拥有的某个宠物详细档案
     @GetMapping("/{petId}")
     public Result<PetProfileVO> getPet(@PathVariable Long petId) {
         Long userId = getCurrentUserId();
@@ -66,8 +92,8 @@ public class PetProfileController {
         return new Result<>(200, "查询成功", PetProfileVO.from(pet));
     }
 
-    // 在 PetProfileController 中添加
 
+    //给用户选择的宠物档案更换装扮
     @PutMapping("/{petId}/decoration")
     public Result<Void> updateDecoration(@PathVariable Long petId, @RequestBody Map<String, String> decoration) {
         Long userId = getCurrentUserId();
@@ -111,9 +137,9 @@ public class PetProfileController {
         return new Result<>(200, "保存成功", null);
     }
 
+    // 组装宠物模型返回给前端，包括基本模型和装扮
     @Resource
     private PetModelMapper petModelMapper;
-
     @GetMapping("/{petId}/render")
     public Result<Map<String, Object>> getPetRenderData(@PathVariable Long petId) {
         Long userId = getCurrentUserId();

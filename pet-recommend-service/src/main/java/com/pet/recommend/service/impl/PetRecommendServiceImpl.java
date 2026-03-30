@@ -2,6 +2,7 @@ package com.pet.recommend.service.impl;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.pet.common.util.JwtUtil;
 import com.pet.recommend.DTO.UserMatchSaveDTO;
 import com.pet.recommend.feign.PetInfoFeignClient;
 import com.pet.recommend.feign.UserMatchFeignClient;
@@ -11,10 +12,9 @@ import com.pet.common.dto.Pet;
 import com.pet.common.dto.PetRecommendDTO;
 import com.pet.common.entity.Result;
 import com.pet.common.util.RedisCacheUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -24,12 +24,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 @Service
 @Slf4j // 替换 System.out
-
 public class PetRecommendServiceImpl implements PetRecommendService {
+
+    @Resource
+    private JwtUtil jwtUtil;
 
     @Resource(name = "matchSaveExecutor")
     private Executor matchSaveExecutor;  // 改为 Spring 管理的线程池
@@ -115,7 +119,7 @@ public class PetRecommendServiceImpl implements PetRecommendService {
             return getDefaultRecommendations(petList);
         }
 
-        // 获取当前用户 ID（从 SecurityContext 或请求上下文获取）
+        // 获取当前用户 ID
         Long userId = getCurrentUserId();
         log.info("当前登录用户ID: {}", userId);
         if (userId != null) {
@@ -415,13 +419,26 @@ public class PetRecommendServiceImpl implements PetRecommendService {
     }
 
     private Long getCurrentUserId() {
+        try {
+            ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attrs == null) {
+                return null;
+            }
 
-        // 从 SecurityContextHolder 获取，或者从请求中解析 token 得到
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof Long) {
-            return (Long) authentication.getPrincipal();
+            HttpServletRequest request = attrs.getRequest();
+            String token = request.getHeader("token");
+
+            if (token == null || token.isEmpty()) {
+                return null;
+            }
+
+            // ✅ 正确：用注入的 jwtUtil，不是 new
+            return jwtUtil.getUserIdFromToken(token);
+
+        } catch (Exception e) {
+            log.error("获取用户ID失败", e);
+            return null;
         }
-        return null;
     }
 
 }

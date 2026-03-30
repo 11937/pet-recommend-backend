@@ -8,7 +8,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient // 开启服务注册发现
 public class PetInfoApplication {
     public static void main(String[] args) {
-
         SpringApplication.run(PetInfoApplication.class, args);
     }
 

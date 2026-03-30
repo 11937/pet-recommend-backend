@@ -22,6 +22,8 @@ public class HealthRecordServiceImpl implements HealthRecordService {
     private HealthRecordMapper healthRecordMapper;
     @Resource
     private PetProfileMapper petProfileMapper;
+    @Resource
+    private CreativePointsServiceImpl creativePointsService;
 
     @Override
     @Transactional
@@ -43,6 +45,8 @@ public class HealthRecordServiceImpl implements HealthRecordService {
         healthRecordMapper.insert(record);
 
         // 3. 暂时不处理点数，后续再加
+        creativePointsService.addPoints(userId, 15);
+
         return HealthRecordVO.from(record);
     }
 

@@ -1,7 +1,7 @@
 # bootstrap.yml（分布式核心配置）
 spring:
   application:
-    name: pet-recommend # 自定义服务名
+    name: pet-recommend-service # 自定义服务名
   cloud:
     nacos:
       discovery:

@@ -24,6 +24,6 @@ public class UserMatchController {
         match.setMatchParams(dto.getMatchParams());
         match.setResult(dto.getResult());
         userMatchService.save(match);
-        return new Result();
+        return new Result(200,"成功");
     }
 }

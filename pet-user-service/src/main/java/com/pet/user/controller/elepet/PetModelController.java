@@ -6,10 +6,11 @@ import com.pet.user.service.elepet.PetModelService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.annotation.Resource;
 import java.util.List;
 
+
+/*查询可选择的模型，用于用户下拉框选项*/
 @RestController
 @RequestMapping("/elePet/model")
 public class PetModelController {
