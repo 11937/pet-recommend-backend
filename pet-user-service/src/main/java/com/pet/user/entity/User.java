@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/** 用户表实体；role 与库字段一致，供登录态与内部服务鉴权（如社区管理员）。 */
 @Data
 @TableName("user")
 public class User {
@@ -17,6 +18,8 @@ public class User {
     private String avatar;
     private LocalDateTime createdAt;
     private String nickName;
+    /** USER / ADMIN，与库字段 role 对应 */
+    private String role;
     private Integer VipLevel;
     private String vipExpire;
 

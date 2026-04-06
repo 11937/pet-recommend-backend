@@ -12,6 +12,16 @@ target/
 # 配置文件（最关键！保护密码、证书）
 **/application.yml
 
+# 本地覆盖（可放真实密码，仅本机使用）
+**/application-local.yml
+**/application-local.yaml
+**/application-local.properties
+
+# 环境变量
+.env
+.env.*
+!.env.example
+
 # 证书
 *.p12
 *.jks

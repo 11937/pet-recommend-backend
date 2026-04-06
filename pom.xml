@@ -18,6 +18,7 @@
         <module>pet-common</module> <!-- 通用工具模块：存放公共DTO、工具类、通用配置 -->
         <module>pet-info-service</module> <!-- 信息服务：核心业务模块（提供接口） -->
         <module>pet-recommend-service</module> <!-- 推荐服务：推荐逻辑业务模块 -->
+        <module>pet-community-service</module> <!-- 社区服务：帖子、点赞、收藏、热度/最新 feeds -->
     </modules>
 
     <!-- ===================== 全局属性配置 ===================== -->

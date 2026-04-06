@@ -20,7 +20,7 @@ public class PetProfileServiceImpl extends ServiceImpl<PetProfileMapper, PetProf
         pet.setBreedId(dto.getBreedId());
         pet.setAvatar(dto.getAvatar());
         pet.setBirthday(dto.getBirthday());
-        pet.setCategory(dto.getCategory());
+        pet.setCategory(dto.getCategory() != null ? dto.getCategory().trim() : null);
         // 初始 decoration 为 null
         save(pet);
         return pet;

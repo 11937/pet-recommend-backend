@@ -117,7 +117,7 @@
                 <version>${spring-boot.version}</version> <!-- 与Spring Boot版本一致（2.7.6） -->
                 <configuration>
                     <!-- 指定信息服务的启动类：打包后JAR的入口类，必须与实际启动类全路径一致 -->
-                    <mainClass>com.pet.cat.info.CatInfoApplication</mainClass>
+                    <mainClass>com.pet.info.PetInfoApplication</mainClass>
                 </configuration>
                 <executions>
                     <!-- 执行repackage目标：将普通Maven JAR转为Spring Boot可执行JAR -->

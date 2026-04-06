@@ -7,7 +7,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-
+/**
+ * 网关全局 CORS：白名单来源、允许 Cookie、统一预检缓存。
+ */
 @Configuration
 public class CorsConfig {
 
@@ -24,6 +26,8 @@ public class CorsConfig {
         config.addAllowedOriginPattern("http://10.80.214.86:1011"); // 本地IP前端
         config.addAllowedOriginPattern("https://11937.github.io");
         config.addAllowedOriginPattern("http://localhost:1011/pet-recommend-frontend");
+        config.addAllowedOriginPattern("http://localhost:5173");
+
         // ========== 必配项（跨域核心） ==========
         config.setAllowCredentials(true); // 允许携带Cookie（跨域必须开）
         config.addAllowedMethod("*");     // 允许所有请求方法（GET/POST/PUT等）

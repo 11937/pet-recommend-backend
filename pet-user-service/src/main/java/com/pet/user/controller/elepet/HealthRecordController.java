@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 电子宠物健康数据：写记录、按宠物查列表、按周/月拉趋势给图表。
+ */
 @Slf4j
 @RestController
 @RequestMapping("/elePet/health")
@@ -31,6 +34,7 @@ public class HealthRecordController {
     @Resource
     private JwtUtil jwtUtil;
 
+    /** 从 Authorization Bearer 解析用户 ID，异常或缺失时返回 null。 */
     private Long getCurrentUserId() {
         try {
             ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -63,7 +67,7 @@ public class HealthRecordController {
         return new Result<>(200, "记录成功", vo);
     }
 
-    @GetMapping("/pet/{petId}")
+    @GetMapping("/record/{petId}")
     public Result<List<HealthRecordVO>> listRecords(
             @PathVariable Long petId,
             @RequestParam(required = false) LocalDate startDate,

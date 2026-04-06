@@ -98,12 +98,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.pet</groupId>
-            <artifactId>pet-user-service</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <!-- ===================== 构建配置（打包为可执行JAR） ===================== -->
@@ -116,7 +110,7 @@
                 <version>${spring-boot.version}</version> <!-- 与Spring Boot版本一致（2.7.6） -->
                 <configuration>
                     <!-- 指定推荐服务的启动类：打包后JAR的入口类，必须准确 -->
-                    <mainClass>com.pet.cat.recommend.RecommendApplication</mainClass>
+                    <mainClass>com.pet.recommend.PetRecommendServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <!-- 执行repackage目标：将普通JAR转为Spring Boot可执行JAR -->

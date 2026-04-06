@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
+/** 注册：校验手机号唯一、密码加密、默认昵称与角色/VIP，成功后签发 JWT。 */
 @Service
 public class RegisterServiceImpl extends ServiceImpl<UserMapper, User> implements RegisterService {
 
@@ -51,6 +52,7 @@ public class RegisterServiceImpl extends ServiceImpl<UserMapper, User> implement
         // 设置默认头像（可根据需要配置）
         user.setAvatar("https://your-domain.com/default-avatar.png");
         user.setVipLevel(0);          // 普通会员
+        user.setRole("USER");
         // vip_expire 默认为 null
 
         // 3. 保存到数据库

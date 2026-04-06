@@ -2,7 +2,6 @@ package com.pet.user.controller.elepet;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.pet.common.entity.Result;
 import com.pet.common.util.JwtUtil;
 import com.pet.user.dto.elepet.PetProfileCreateDTO;
@@ -20,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 @Slf4j
 @RestController
@@ -143,17 +143,28 @@ public class PetProfileController {
     @GetMapping("/{petId}/render")
     public Result<Map<String, Object>> getPetRenderData(@PathVariable Long petId) {
         Long userId = getCurrentUserId();
+        if (userId == null) {
+            return new Result<>(401, "未登录或令牌无效", null);
+        }
 
         // 1. 获取宠物档案
         PetProfile pet = petProfileService.getById(petId);
-        if (pet == null || !pet.getUserId().equals(userId)) {
+        if (pet == null || !userId.equals(pet.getUserId())) {
             return new Result<>(404, "宠物不存在或无权访问", null);
         }
 
-        // 2. 根据品类获取模型
-        PetModel model = petModelMapper.selectOne(
-                new LambdaQueryWrapper<PetModel>().eq(PetModel::getCategory, pet.getCategory())
+        // 2. 根据品类获取模型（与 pet_model.category 一致，首尾空白已 trim）
+        // 注意：勿用 selectOne，若 category 重复会抛 TooManyResultsException → 前端 500
+        String category = pet.getCategory() == null ? "" : pet.getCategory().trim();
+        if (category.isEmpty()) {
+            return new Result<>(404, "宠物档案未设置分类，无法匹配模型", null);
+        }
+        List<PetModel> modelRows = petModelMapper.selectList(
+                Wrappers.<PetModel>lambdaQuery()
+                        .eq(PetModel::getCategory, category)
+                        .last("LIMIT 1")
         );
+        PetModel model = modelRows.isEmpty() ? null : modelRows.get(0);
         if (model == null) {
             return new Result<>(404, "未找到该品类对应的宠物模型", null);
         }
@@ -161,9 +172,17 @@ public class PetProfileController {
         // 3. 解析当前装扮（如果没有装扮，用模型的默认值）
         Map<String, String> decoration = new HashMap<>();
         if (pet.getDecoration() != null && !pet.getDecoration().isEmpty()) {
-            decoration = JSON.parseObject(pet.getDecoration(), new TypeReference<Map<String, String>>() {});
+            try {
+                decoration = JSON.parseObject(pet.getDecoration(), new TypeReference<Map<String, String>>() {});
+                if (decoration == null) {
+                    decoration = new HashMap<>();
+                }
+            } catch (Exception e) {
+                log.warn("解析 decoration JSON 失败 petId={}", petId, e);
+                decoration.put("bodyColor", model.getDefaultColor());
+                decoration.put("pattern", model.getDefaultPattern());
+            }
         } else {
-            // 默认使用模型的默认颜色和花纹
             decoration.put("bodyColor", model.getDefaultColor());
             decoration.put("pattern", model.getDefaultPattern());
         }
